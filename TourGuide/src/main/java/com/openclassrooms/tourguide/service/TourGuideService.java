@@ -15,6 +15,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,10 +43,16 @@ public class TourGuideService {
 	public final Tracker tracker;
 	boolean testMode = true;
 
+	public ExecutorService getExecutorService() {
+		return executorService;
+	}
+
+	private final ExecutorService executorService = Executors.newFixedThreadPool(1000);
+
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
-		
+
 		Locale.setDefault(Locale.US);
 
 		if (testMode) {
@@ -89,10 +99,24 @@ public class TourGuideService {
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user);
-		return visitedLocation;
+		Locale.setDefault(Locale.US);
+		CompletableFuture.supplyAsync(()-> {
+			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+			user.addToVisitedLocations(visitedLocation);
+			return visitedLocation;
+		}, executorService).thenAccept(location -> {
+			try {
+				rewardsService.calculateRewards(user);
+			} catch (ExecutionException e) {
+				throw new RuntimeException(e);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}).exceptionally(throwable -> {
+			System.out.println("ERROR : "+throwable.getMessage());
+			return null;
+		});
+		return null;
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
