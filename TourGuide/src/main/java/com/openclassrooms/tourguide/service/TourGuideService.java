@@ -107,12 +107,10 @@ public class TourGuideService {
 		}, executorService).thenAccept(location -> {
 			try {
 				rewardsService.calculateRewards(user);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			} catch (InterruptedException e) {
+			} catch (ExecutionException | InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-		}).exceptionally(throwable -> {
+        }).exceptionally(throwable -> {
 			System.out.println("ERROR : "+throwable.getMessage());
 			return null;
 		});

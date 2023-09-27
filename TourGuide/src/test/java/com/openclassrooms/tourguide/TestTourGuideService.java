@@ -21,6 +21,7 @@ import tripPricer.Provider;
 
 public class TestTourGuideService {
 
+	// ne passe pas
 	@Test
 	public void getUserLocation() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -31,7 +32,7 @@ public class TestTourGuideService {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 		tourGuideService.tracker.stopTracking();
-		assertTrue(visitedLocation.userId.equals(user.getUserId()));
+        assertEquals(visitedLocation.userId, user.getUserId());
 	}
 
 	@Test
@@ -77,6 +78,7 @@ public class TestTourGuideService {
 		assertTrue(allUsers.contains(user2));
 	}
 
+	//ne passe pas
 	@Test
 	public void trackUser() {
 		GpsUtil gpsUtil = new GpsUtil();

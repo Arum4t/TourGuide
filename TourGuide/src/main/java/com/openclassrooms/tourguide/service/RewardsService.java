@@ -44,12 +44,12 @@ public class RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-	
+
 	public void calculateRewards(User user) throws ExecutionException, InterruptedException {
 		CopyOnWriteArrayList<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
 		CopyOnWriteArrayList<Attraction> attractions = new CopyOnWriteArrayList<>(gpsUtil.getAttractions());
 
-		CompletableFuture.supplyAsync(()-> {
+		CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(()-> {
 			for (VisitedLocation visitedLocation : userLocations) {
 				for (Attraction attraction : attractions) {
 					if (user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
@@ -59,10 +59,9 @@ public class RewardsService {
 					}
 				}
 			}
-            return null;
-        },executorService);
+		},executorService);
+		completableFuture.get();
 	}
-
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
 		return !(getDistance(attraction, location) > attractionProximityRange);
 	}
