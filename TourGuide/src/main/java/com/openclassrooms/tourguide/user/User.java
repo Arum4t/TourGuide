@@ -68,9 +68,9 @@ public class User {
 	public void clearVisitedLocations() {
 		visitedLocations.clear();
 	}
-	
+
 	public void addUserReward(UserReward userReward) {
-		if(userRewards.stream().noneMatch(r -> true)) {
+		if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {
 			userRewards.add(userReward);
 		}
 	}

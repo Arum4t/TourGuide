@@ -105,11 +105,7 @@ public class TourGuideService {
 			user.addToVisitedLocations(visitedLocation);
 			return visitedLocation;
 		}, executorService).thenAccept(location -> {
-			try {
 				rewardsService.calculateRewards(user);
-			} catch (ExecutionException | InterruptedException e) {
-				throw new RuntimeException(e);
-			}
         }).exceptionally(throwable -> {
 			System.out.println("ERROR : "+throwable.getMessage());
 			return null;
@@ -171,7 +167,6 @@ public class TourGuideService {
 		double rightLimit = 180;
 		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
 	}
-
 	private double generateRandomLatitude() {
 		double leftLimit = -85.05112878;
 		double rightLimit = 85.05112878;
