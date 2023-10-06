@@ -3,8 +3,11 @@ package com.openclassrooms.tourguide;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -21,18 +24,21 @@ import tripPricer.Provider;
 
 public class TestTourGuideService {
 
-	// ne passe pas
 	@Test
-	public void getUserLocation() {
+	public void getUserLocation() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		tourGuideService.trackUserLocation(user);
+		TimeUnit.SECONDS.sleep(2);
 		tourGuideService.tracker.stopTracking();
-        assertEquals(visitedLocation.userId, user.getUserId());
+		int taille = user.getVisitedLocations().size();
+		int lastPosition = taille-1;
+		VisitedLocation visitedLocation = user.getVisitedLocations().get(lastPosition);
+		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
@@ -78,7 +84,6 @@ public class TestTourGuideService {
 		assertTrue(allUsers.contains(user2));
 	}
 
-	//ne passe pas
 	@Test
 	public void trackUser() {
 		GpsUtil gpsUtil = new GpsUtil();

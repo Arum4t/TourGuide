@@ -105,13 +105,13 @@ public class TourGuideService {
 			user.addToVisitedLocations(visitedLocation);
 			return visitedLocation;
 		}, executorService).thenAccept(location -> {
-				rewardsService.calculateRewards(user);
-        }).exceptionally(throwable -> {
+			rewardsService.calculateRewards(user);
+		}).exceptionally(throwable -> {
 			System.out.println("ERROR : "+throwable.getMessage());
 			return null;
 		});
 		return null;
-	}
+    }
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
