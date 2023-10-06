@@ -26,7 +26,7 @@ import com.openclassrooms.tourguide.user.UserReward;
 public class TestRewardsService {
 
 	@Test
-	public void userGetRewards(){
+	public void userGetRewards() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
@@ -37,14 +37,9 @@ public class TestRewardsService {
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		tourGuideService.trackUserLocation(user);
-		ThreadPoolExecutor executorService = (ThreadPoolExecutor) tourGuideService.getExecutorService();
-		while (executorService.getActiveCount() > 0) {
-			try {
-				TimeUnit.SECONDS.sleep(15);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+
+		TimeUnit.SECONDS.sleep(2);
+
 		List<UserReward> userRewards = user.getUserRewards();
 		tourGuideService.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
@@ -71,9 +66,10 @@ public class TestRewardsService {
 
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		ThreadPoolExecutor executorService = (ThreadPoolExecutor) rewardsService.getExecutorService();
-		while (executorService.getActiveCount() > 0) {
+		ThreadPoolExecutor tourGuideServiceExecutorService = (ThreadPoolExecutor) tourGuideService.getExecutorService();
+		while (executorService.getActiveCount() > 0 || tourGuideServiceExecutorService.getActiveCount() > 0) {
 			try {
-				TimeUnit.SECONDS.sleep(15);
+				TimeUnit.SECONDS.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

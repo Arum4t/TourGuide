@@ -47,7 +47,6 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 
-
 		CompletableFuture.supplyAsync(()-> {
 			List<Attraction> attractions = gpsUtil.getAttractions();
 			for (VisitedLocation visitedLocation : userLocations) {
@@ -63,11 +62,11 @@ public class RewardsService {
         },executorService);
 	}
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		return !(getDistance(attraction, location) > attractionProximityRange);
+		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
-	
+
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		return !(getDistance(attraction, visitedLocation.location) > proximityBuffer);
+		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 	
 	private int getRewardPoints(Attraction attraction, User user) {

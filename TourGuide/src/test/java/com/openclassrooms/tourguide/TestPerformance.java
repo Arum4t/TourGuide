@@ -47,12 +47,12 @@ public class TestPerformance {
 
 
 	@Test
-	public void HighVolumeTrackLocation() {
+	public void HighVolumeTrackLocation(){
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(1000);
+		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers;
