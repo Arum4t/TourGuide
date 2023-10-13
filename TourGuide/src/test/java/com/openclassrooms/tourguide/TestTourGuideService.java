@@ -85,14 +85,19 @@ public class TestTourGuideService {
 	}
 
 	@Test
-	public void trackUser() {
+	public void trackUser() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		tourGuideService.trackUserLocation(user);
+		TimeUnit.SECONDS.sleep(2);
+		tourGuideService.tracker.stopTracking();
+		int taille = user.getVisitedLocations().size();
+		int lastPosition = taille-1;
+		VisitedLocation visitedLocation = user.getVisitedLocations().get(lastPosition);
 
 		tourGuideService.tracker.stopTracking();
 
