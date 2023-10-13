@@ -104,16 +104,24 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
-	@Disabled // Not yet implemented
+	// Not yet implemented
+	// j'ai augmenté attractionProximityRange qui était trop faible pour trouver des attractions proches
+	// getNearByAttractions utilise isWithinAttractionProximity qui utilise attractionProximityRange
 	@Test
-	public void getNearbyAttractions() {
+	public void getNearbyAttractions() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		tourGuideService.trackUserLocation(user);
+
+		TimeUnit.SECONDS.sleep(2);
+		tourGuideService.tracker.stopTracking();
+		int taille = user.getVisitedLocations().size();
+		int lastPosition = taille-1;
+		VisitedLocation visitedLocation = user.getVisitedLocations().get(lastPosition);
 
 		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
 
