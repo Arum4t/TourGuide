@@ -11,6 +11,9 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.openclassrooms.tourguide.user.DTO.AttractionDto;
+import com.openclassrooms.tourguide.user.DTO.LocationDto;
+import com.openclassrooms.tourguide.user.DTO.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -95,7 +98,7 @@ public class TourGuideService {
 			// rewardPoint
 			UUID attractionUuid = attraction.attractionId;
 			Integer rewardPoint = rewardCentral.getAttractionRewardPoints(attractionUuid,userUuid);
-			attractionDto.setRewardPoint(rewardPoint);
+			attractionDto.setRewardPointGainForTheAttraction(rewardPoint);
 
 			attractionDtoList.add(attractionDto);
 		}

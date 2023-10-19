@@ -2,7 +2,7 @@ package com.openclassrooms.tourguide;
 
 import java.util.List;
 
-import com.openclassrooms.tourguide.user.UserDto;
+import com.openclassrooms.tourguide.user.DTO.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

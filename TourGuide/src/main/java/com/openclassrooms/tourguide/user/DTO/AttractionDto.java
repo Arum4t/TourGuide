@@ -1,7 +1,6 @@
-package com.openclassrooms.tourguide.user;
+package com.openclassrooms.tourguide.user.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import gpsUtil.location.Location;
 import lombok.Data;
 
 import java.util.UUID;
