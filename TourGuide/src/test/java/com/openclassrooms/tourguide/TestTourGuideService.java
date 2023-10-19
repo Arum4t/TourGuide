@@ -104,9 +104,6 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
-	// Not yet implemented
-	// j'ai augmenté attractionProximityRange qui était trop faible pour trouver des attractions proches
-	// getNearByAttractions utilise isWithinAttractionProximity qui utilise attractionProximityRange
 	@Test
 	public void getNearbyAttractions() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();

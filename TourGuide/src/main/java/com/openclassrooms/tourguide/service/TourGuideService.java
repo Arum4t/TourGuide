@@ -2,23 +2,12 @@ package com.openclassrooms.tourguide.service;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.tracker.Tracker;
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.user.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,6 +20,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
+import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
@@ -63,7 +53,70 @@ public class TourGuideService {
 		}
 		tracker = new Tracker(this);
 		addShutDownHook();
+
 	}
+	public UserDto getClosestFiveTouristAttractionsToTheUser() throws InterruptedException {
+		//User user = getUser(userName);
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		UserDto userDto = new UserDto();
+		List<AttractionDto> attractionDtoList = new ArrayList<>();
+		UUID userUuid = user.getUserId();
+		RewardCentral rewardCentral = new RewardCentral();
+
+		// tourist location
+		trackUserLocation(user);
+		TimeUnit.SECONDS.sleep(2);
+		VisitedLocation visitedLocation = user.getVisitedLocations().get(user.getVisitedLocations().size()-1);
+		double longitude = visitedLocation.location.longitude;
+		double latitude = visitedLocation.location.latitude;
+		LocationDto locationDtoTourist = new LocationDto();
+		locationDtoTourist.setLatitude(latitude);
+		locationDtoTourist.setLongitude(longitude);
+		userDto.setTouristLocation(locationDtoTourist);
+
+		// attraction name, attraction location, distance between tourist, attraction and reward
+		List<Attraction> attractions = getFiveNearByAttractions(visitedLocation);
+		for (Attraction attraction : attractions){
+			//attraction name
+			AttractionDto attractionDto = new AttractionDto();
+			String nameAttraction = attraction.attractionName;
+			attractionDto.setAttractionName(nameAttraction);
+
+			//attraction location
+			LocationDto locationDtoAttraction = new LocationDto();
+			locationDtoAttraction.setLatitude(attraction.latitude);
+			locationDtoAttraction.setLongitude(attraction.longitude);
+			attractionDto.setAttractionLocation(locationDtoAttraction);
+
+			//attraction distance
+			Location newLocation = new Location(attraction.latitude, attraction.longitude);
+			attractionDto.setDistanceBetweenTouristAndAttraction(rewardsService.getDistance(visitedLocation.location, newLocation));
+
+			// rewardPoint
+			UUID attractionUuid = attraction.attractionId;
+			Integer rewardPoint = rewardCentral.getAttractionRewardPoints(attractionUuid,userUuid);
+			attractionDto.setRewardPoint(rewardPoint);
+
+			attractionDtoList.add(attractionDto);
+		}
+
+		userDto.setTouristAttractions(attractionDtoList);
+		return userDto;
+
+	}
+	public List<Attraction> getFiveNearByAttractions(VisitedLocation visitedLocation) {
+		List<Attraction> nearbyAttractions = new ArrayList<>();
+		for (Attraction attraction : gpsUtil.getAttractions()) {
+			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)){
+				nearbyAttractions.add(attraction);
+			}
+			if (nearbyAttractions.size() >= 5) {
+				break;
+			}
+		}
+		return nearbyAttractions;
+	}
+
 
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
