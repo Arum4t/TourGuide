@@ -58,9 +58,9 @@ public class TourGuideService {
 		addShutDownHook();
 
 	}
-	public UserDto getClosestFiveTouristAttractionsToTheUser() throws InterruptedException {
-		//User user = getUser(userName);
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+	public UserDto getClosestFiveTouristAttractionsToTheUser(String userName) throws InterruptedException {
+		User user = getUser(userName);
+		//User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserDto userDto = new UserDto();
 		List<AttractionDto> attractionDtoList = new ArrayList<>();
 		UUID userUuid = user.getUserId();
@@ -147,10 +147,13 @@ public class TourGuideService {
 
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
+
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
+
 		user.setTripDeals(providers);
+
 		return providers;
 	}
 

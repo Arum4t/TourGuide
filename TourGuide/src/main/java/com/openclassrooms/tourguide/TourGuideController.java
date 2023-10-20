@@ -29,8 +29,8 @@ public class TourGuideController {
     }
     
     @RequestMapping("/getLocation") 
-    public UserDto getLocation() throws InterruptedException {
-    	return tourGuideService.getClosestFiveTouristAttractionsToTheUser();
+    public UserDto getLocation(String userName) throws InterruptedException {
+    	return tourGuideService.getClosestFiveTouristAttractionsToTheUser(userName);
     }
 
 //    @RequestMapping("/getLocation")

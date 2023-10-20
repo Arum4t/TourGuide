@@ -17,8 +17,4 @@ public class UserDto {
     private LocationDto touristLocation;
 
     private List<AttractionDto> touristAttractions;
-
-    public void setTouristLocation(Double latitude, Double longitude) {
-    }
-
 }

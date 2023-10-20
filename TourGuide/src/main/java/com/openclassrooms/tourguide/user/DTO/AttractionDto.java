@@ -19,6 +19,4 @@ public class AttractionDto {
 
     private Integer rewardPointGainForTheAttraction;
 
-    public void setAttractionLocation(double latitude, double longitude) {
-    }
 }

@@ -10,7 +10,6 @@ public class UserPreferences {
 	
 	public UserPreferences() {
 	}
-	
 	public void setAttractionProximity(int attractionProximity) {
 		this.attractionProximity = attractionProximity;
 	}
