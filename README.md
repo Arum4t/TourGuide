@@ -1,4 +1,4 @@
-<img src="https://zupimages.net/up/23/50/puph.png" alt="" />
+<p align="center"><img src="https://zupimages.net/up/23/50/j36b.png" alt="" /></p>
 
 ## Languages and Tools
 <p align="center">
