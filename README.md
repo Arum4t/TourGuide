@@ -1,4 +1,4 @@
-<img src="https://user.oc-static.com/upload/2023/07/19/16897694013302_fr_DA-JAVA_P7-P8-P9_P8-01.png" alt="" />
+<img src="https://zupimages.net/up/23/50/r5p9.png" alt="" />
 
 ## Languages and Tools
 <p align="center">
