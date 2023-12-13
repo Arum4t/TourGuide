@@ -6,7 +6,7 @@
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="60" height="60"/>
 </a>&ensp;   
 <a href="https://gitlab.com/" target="_blank" rel="noreferrer"> 
-<img src="https://assets.stickpng.com/images/5847f997cef1014c0b5e48c1.png" alt="mysql" width="70" height="70"/> 
+<img src="https://assets.stickpng.com/images/5847f997cef1014c0b5e48c1.png" alt="gitlab" width="50" height="50"/> 
 </a>&emsp; 
 <a href="https://spring.io/" target="_blank" rel="noreferrer"> 
 <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="50" height="50"/>
